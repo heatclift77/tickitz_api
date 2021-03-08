@@ -1,4 +1,4 @@
-const connection = require('../config/db')
+const connection = require("../config/db");
 const transaction = {
     getTransactionsByUser : (id_user, page) => {
         return new Promise((resolve, reject)=>{
@@ -12,12 +12,12 @@ const transaction = {
             LIMIT ${transaction_page}, 20 
             `, function(err, results, fields){
                 if(!err){
-                    resolve(results)
+                    resolve(results);
                 }else{
-                    reject(err)
+                    reject(err);
                 }
-            })
-        })
+            });
+        });
     },
     getTransaction : (page) => {
         return new Promise((resolve, reject)=>{
@@ -30,35 +30,35 @@ const transaction = {
             LIMIT ${transaction_page}, 20 
             `, function(err, results, fields){
                 if(!err){
-                    resolve(results)
+                    resolve(results);
                 }else{
-                    reject(err)
+                    reject(err);
                 }
-            })
-        })
+            });
+        });
     },
     deleteByIdUser : (id_user) => {
         return new Promise((resolve, reject)=>{
             connection.query(`DELETE FROM table_transaction WHERE id_user='${id_user}'`, function(err, results, fields){
                 if(!err){
-                    resolve(results)
+                    resolve(results);
                 }else{
-                    reject(err)
+                    reject(err);
                 }
-            })
-        })
+            });
+        });
     },
     deleteById : (id_transaction)=>{
         return new Promise((resolve, reject)=>{
             connection.query(`DELETE FROM table_transaction WHERE id_transaction='${id_transaction}'`, function(err, results, fields){
                 if(!err){
-                    resolve(results)
+                    resolve(results);
                 }else{
-                    reject(err)
+                    reject(err);
                 }
-            })
-        })
+            });
+        });
     }
-}
+};
 
-module.exports = transaction
+module.exports = transaction;
