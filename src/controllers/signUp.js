@@ -1,5 +1,4 @@
 const { v4: uuidv4} = require("uuid");
-// const connection = require('../connection')
 const mysql = require("mysql2");
 
 exports.postAkun = (req, res)=>{
@@ -15,7 +14,7 @@ exports.postAkun = (req, res)=>{
     
     connection.query(
         `INSERT INTO table_akun (email, password, id_user) VALUES ('${email}', '${pass}', '${id_user}')`,
-        function(err, results, fields) {
+        function(err, results) {
             if(!err){
                 res.status(201);
                 res.send({ 

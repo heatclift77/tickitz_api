@@ -44,7 +44,7 @@ exports.postJadwal = (req, res)=>{
 
 exports.getByIdCinema = (req, res) => {
     const id_cinema = req.params.id_cinema;
-    connection.query(`SELECT * FROM table_jadwal_tayang WHERE id_cinema='${id_cinema}'`, function(err, results, fields){
+    connection.query(`SELECT * FROM table_jadwal_tayang WHERE id_cinema='${id_cinema}'`, function(err, results){
         if(!err){
             res.status(200);
             res.send(results);

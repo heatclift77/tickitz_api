@@ -1,5 +1,6 @@
 require("dotenv").config();
 const model = require("../models/transaction");
+const standart_response = require('../utilities/standart_response')
 
 exports.deleteById = (req, res) => {
     const id_transaction = req.params.id;
@@ -42,11 +43,10 @@ exports.getTransactionsByUser = (req, res)=>{
     const page = req.params.page;
     model.getTransactionsByUser(id_user, page)
     .then(response => {
-        res.status(200);
-        res.send(response);
+        standart_response(res, 200, 'Succes', response)
     })
     .catch(err =>{
-        res.status(400);
-        res.send(err);
+        let {status, message} = err
+        standart_response(res, status, message, [])
     });
 };

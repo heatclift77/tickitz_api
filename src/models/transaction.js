@@ -9,8 +9,8 @@ const transaction = {
             WHERE id_user='${id_user}' 
             ORDER BY created_at 
             ASC
-            LIMIT ${transaction_page}, 20 
-            `, function(err, results, fields){
+            LIMIT ${transaction_page}, 3 
+            `, function(err, results){
                 if(!err){
                     resolve(results);
                 }else{
@@ -21,14 +21,14 @@ const transaction = {
     },
     getTransaction : (page) => {
         return new Promise((resolve, reject)=>{
-            let transaction_page = (page == 1) ? page = 0:  page * 20 - 20;
+            let transaction_page = (page == 1) ? page = 0:  page * 5 - 5;
             connection.query(`
             SELECT * 
             FROM table_transaction 
             ORDER BY created_at 
             ASC
-            LIMIT ${transaction_page}, 20 
-            `, function(err, results, fields){
+            LIMIT ${transaction_page}, 5 
+            `, function(err, results){
                 if(!err){
                     resolve(results);
                 }else{
@@ -39,7 +39,7 @@ const transaction = {
     },
     deleteByIdUser : (id_user) => {
         return new Promise((resolve, reject)=>{
-            connection.query(`DELETE FROM table_transaction WHERE id_user='${id_user}'`, function(err, results, fields){
+            connection.query(`DELETE FROM table_transaction WHERE id_user='${id_user}'`, function(err, results){
                 if(!err){
                     resolve(results);
                 }else{
@@ -50,7 +50,7 @@ const transaction = {
     },
     deleteById : (id_transaction)=>{
         return new Promise((resolve, reject)=>{
-            connection.query(`DELETE FROM table_transaction WHERE id_transaction='${id_transaction}'`, function(err, results, fields){
+            connection.query(`DELETE FROM table_transaction WHERE id_transaction='${id_transaction}'`, function(err, results){
                 if(!err){
                     resolve(results);
                 }else{

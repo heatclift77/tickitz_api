@@ -14,7 +14,7 @@ exports.login = (req, res)=>{
 
     connection.query(
         `SELECT email FROM table_akun WHERE email='${email}' AND password ='${pass}'`,
-        function(err, results, fields) {
+        function(err, results) {
             if(!err){
                 if(results.length > 0){
                     res.status(200);

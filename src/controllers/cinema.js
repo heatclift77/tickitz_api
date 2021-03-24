@@ -1,15 +1,6 @@
 const { v4:uuidv4 } = require("uuid");
-const mysql = require("mysql2");
 require("dotenv").config();
 
-
-// connection
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    database: process.env.DBS
-});
-// ------------
 
 exports.postCinema = (req, res)=>{
     const id_cinema = uuidv4();
@@ -17,6 +8,7 @@ exports.postCinema = (req, res)=>{
     const cinema = req.body.cinema;
     const price = req.body.price;
 
+    
     connection.query(`
     INSERT INTO table_cinema 
     (id_cinema, id_movie, cinema, price) 

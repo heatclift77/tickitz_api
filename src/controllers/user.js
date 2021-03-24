@@ -1,48 +1,78 @@
 const model = require("../models/user");
-// exports.getUser = (req, res)=>{
-//     connection.query(`SELECT * FROM table_user ORDER BY created_at ASC`, function(err, results, fields){
-//         if(!err){
-//             res.status(200)
-//             res.send(results)
-//         }else{
-//             res.status(400)
-//             res.send(err)
-//         }
-//     })
-// }
-// exports.getUserById = (req, res)=>{
-//     const id_user = req.params.id_user
-//     connection.query(`SELECT * FROM table_user WHERE id_user='${id_user}' ORDER BY created_at ASC`, function(err, results, fields){
-//         if(!err){
-//             res.status(200)
-//             res.send(results)
-//         }else{
-//             res.status(400)
-//             res.send(err)
-//         }
-//     })
-// }
+const standart_response = require('../utilities/standart_response')
+const jwt = require('jsonwebtoken')
 
-exports.postUser = (req, res) => {
-    const email = req.body.email;
-    const pass = req.body.pass;
-    model.postUser(email, pass)
+exports.login = (req, res) => {
+    const {email, password} = req.body
+    if(email == undefined || password == undefined){
+        res.json({
+            status : 400,
+            message : 'masukkan email dan password dengan benar'
+        })
+    }else{
+        model.login(email, password)
+        .then(response => {
+            const payload = {email : response.results[0].email}
+            jwt.sign(payload, process.env.PRIVATE_KEY, {expiresIn: '1h' }, function(err, token){
+                res.json({
+                    status : response.status,
+                    message : response.message,
+                    token : token
+                })
+            })
+        })
+        .catch(err =>{
+            standart_response(res, err.status, err.message, [])
+        });
+    }
+};
+exports.verifycation = (req, res) => {
+    const email = req.params.email;
+    model.emailVerifycation(email)
     .then(response => {
-        res.status(201);
-        res.send(response);
+        res.redirect('http://localhost:3000/signin')
     })
     .catch(err =>{
         res.send(err);
     });
 };
+
+
+exports.postUser = async (req, res, next) => {
+    const email = req.body.email;
+    const pass = req.body.pass;
+    if(email == undefined || pass == undefined){
+        standart_response(res, 400, "Bad Request", [])
+    }else{
+        model.register(email, pass)
+        .then(response => {
+            let { status, message , results} = response
+            standart_response(res, status, message, results)
+            next()
+        })
+        .catch(reject =>{
+            let { status, message , err} = reject
+            standart_response(res, status, message, err)
+        });
+    };
+}
 exports.updateUser = (req, res) => {
     const id_user = req.params.id;
-    const pass = req.body.pass;
-    const username =  req.body.username;
-    const firsName =  req.body.firstName;
-    const lastName =  req.body.lastName;
-    const telephone =  req.body.telephone;
-    model.updateUser(id_user, pass, username, firsName, lastName, telephone)
+    const {password, username, firstName, lastName, telephone} = req.body;
+    model.updateUser(id_user, password, username, firstName, lastName, telephone)
+    .then(response => {
+        res.json({
+            message : 'Data Updated',
+            results : [response]
+        }).status(201)
+    })
+    .catch(err =>{
+        res.send(err);
+    });
+};
+exports.getUserById = (req, res) => {
+    const id_user = req.params.id;
+    model.getUserById(id_user)
     .then(response => {
         res.status(201);
         res.send(response);

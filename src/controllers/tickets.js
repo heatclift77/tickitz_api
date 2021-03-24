@@ -1,4 +1,6 @@
 const model = require("../models/ticket");
+const standart_response = require('../utilities/standart_response')
+
 exports.postTickets = (req, res)=>{
     const id_user = req.body.id_user;
     const id_movie = req.body.id_movie;
@@ -26,15 +28,18 @@ exports.postTickets = (req, res)=>{
         res.send(err);
     });
 };
-
 exports.getTicketsByDate = (req, res)=>{
-    model.getByIdUser()
-    .then(response =>{
-        res.status(200);
-        res.send(response);
-    })
-    .catch(err =>{
-        res.status(400);
-        res.send(err);
-    });
+    const id_movie= req.query.id_movie
+    if(id_movie == undefined){
+        standart_response(res, 400, 'Bad Request', [])
+    }else{
+        model.getTicketsByDate(id_movie)
+        .then(response =>{
+            standart_response(res, 200, 'Results Found', response)
+        })
+        .catch(err =>{
+            const { status, message } = err
+            standart_response(res, status, message, [])
+        });
+    }
 };

@@ -1,53 +1,43 @@
-const { v4:uuidv4 } = require("uuid");
-const mysql = require("mysql2");
+const movieModels = require('../models/movies')
+const standart_response = require('../utilities/standart_response')
 require("dotenv").config();
-const timeStamp = require('time-stamp');
-const { default: timestamp } = require("time-stamp");
-
-
-// connection
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    database: process.env.DBS
-});
-// ------------
+const { v4:uuidv4, stringify } = require('uuid');
+const redis = require('redis')
+const client = redis.createClient(6379)
 
 exports.getMovie = (req, res)=>{
-    let data = req.params.page;
-    movie_page = (data == 1) ? data = 0:  data * 5 - 5;
-    connection.query(`SELECT * FROM table_movie LIMIT ${movie_page}, 5`, function(err, results, fields){
-        if(!err){
-            res.status(200);
-            res.send(results);
-        }else{
-            res.send(err);
-        }
-    });
+    const page = req.query.page
+    const limit = req.query.limit
+    movieModels.getMovie(page, limit)
+    .then(response => {
+        client.setex('dataMovie', 60 * 60 * 12, JSON.stringify(response))
+        standart_response(res, 200, 'Succes', response)
+    })
+    .catch(err => standart_response(res, 400, 'bad request', err))
+
 };
 exports.getMovieById = (req, res)=>{
-    let id_movie = req.params.id;
-    connection.query(`SELECT * FROM table_movie WHERE id_movie = '${id_movie}'`, function(err, results, fields){
-        if(!err){
-            res.status(200);
-            res.send(results);
-        }else{
-            res.send(err);
-        }
+    let id_movie = req.query.id;
+    movieModels.getMovieById(id_movie)
+    .then(response => {
+        standart_response(res, 200, 'Succes', response)
+    })
+    .catch(err =>{
+        let {status, message} = err
+        standart_response(res, status, message, [])
     });
 };
 exports.searchMovie = (req, res)=>{
-    const key = req.params.key;
-    connection.query(`SELECT * FROM table_movie WHERE title LIKE '${key}_%'`, function(err, results, fields){
-        if(!err){
-            res.status(200);
-            res.send(results);
-        }else{
-            res.send(err);
-        }
-    });
+    const key = req.query.key;
+    movieModels.searchMovie(key)
+    .then(response =>{
+        standart_response(res, 200, 'Succes', response)
+    })
+    .catch(err =>{
+        let {status, message} = err
+        standart_response(res, status, message, [])
+    })
 };
-
 exports.postMovie = (req, res)=>{
     const id_movie = uuidv4();
     const title = req.body.title;
@@ -57,26 +47,26 @@ exports.postMovie = (req, res)=>{
     const duration = req.body.duration;
     const casts = req.body.casts;
     const synopsis = req.body.synopsis;
-
-    connection.query(`INSERT INTO table_movie 
-    (id_movie, title, genre, release_date, directed_by, duration, casts, synopsis) 
-    VALUES 
-    ('${id_movie}', '${title}', '${genre}', '${release_date}', '${directed_by}', '${duration}', '${casts}', '${synopsis}')`, 
-    function(err, results){
-            if(!err){
-                res.status(201);
-                res.send({ 
-                    message : "sucess",
-                    fieldCount : results.fieldCount,
-                    affectRows : results.affectedRows,
-                    insertId: results.insertId,
-                    info:results.info,
-                    serverStatus:results.serverStatus,
-                    warningStatus:results.warningStatus
-                });
-            }else{
-                res.status(400);
-                res.send({ message : "bad request"});
-        }
-    });
+    const image = `http://localhost:5000/img/${req.file.filename}`;
+    if(
+        title == undefined ||
+        genre == undefined ||
+        release_date == undefined ||
+        directed_by == undefined ||
+        directed_by == undefined ||
+        duration == undefined ||
+        casts == undefined ||
+        synopsis == undefined  
+    ){
+        standart_response(res, 400, 'Bad Request', [])
+    }else{
+        movieModels.postMovie(id_movie, title, genre, release_date, directed_by, duration, casts, synopsis, image)
+        .then(response =>{
+            standart_response(res, 201, 'Created', response)
+        })
+        .catch(err =>{
+            let {status, message, response} = err
+            standart_response(res, status, message, response)
+        })
+    }
 };
