@@ -1,57 +1,28 @@
-const { v4:uuidv4 } = require("uuid");
-const mysql = require("mysql2");
+const models = require("../models/jadwal_tayang");
+const standart_response = require("../utilities/standart_response");
 require("dotenv").config();
+// const { v4:uuidv4 } = require("uuid");
+// const redis = require("redis");
+// const client = redis.createClient(6379);
 
-
-// connection
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    database: process.env.DBS
-});
-// ------------
-
-exports.postJadwal = (req, res)=>{
-    const id_jadwal = uuidv4();
-    const id_movie = req.body.id_movie;
-    const id_cinema = req.body.id_cinema;
-    const hari = req.body.hari;
-    const jam = req.body.jam;
-
-    connection.query(`
-    INSERT INTO table_jadwal_tayang 
-    (id_jadwal, id_movie, id_cinema, hari, jam) 
-    VALUES 
-    ('${id_jadwal}', '${id_movie}', '${id_cinema}', '${hari}', '${jam}')`, 
-    function(err, results){
-            if(!err){
-                res.status(201);
-                res.send({ 
-                    message : "sucess",
-                    fieldCount : results.fieldCount,
-                    affectRows : results.affectedRows,
-                    insertId: results.insertId,
-                    info:results.info,
-                    serverStatus:results.serverStatus,
-                    warningStatus:results.warningStatus
-                });
-            }else{
-                res.status(400);
-                res.send(err);
-        }
-    });
+exports.getJadwalList = (req, res)=>{
+    const code_ticket = req.query.code_ticket
+    models.jadwal_tayang(code_ticket)
+    .then(response => {
+        standart_response(res, response.status, response.message, response.data);
+    })
+    .catch(err => standart_response(res, err.status, err.message, err.data));
 };
-
-exports.getByIdCinema = (req, res) => {
-    const id_cinema = req.params.id_cinema;
-    connection.query(`SELECT * FROM table_jadwal_tayang WHERE id_cinema='${id_cinema}'`, function(err, results){
-        if(!err){
-            res.status(200);
-            res.send(results);
-        }else{
-            res.status(400);
-            res.send(err);
-        }
-    });
-};
+exports.jadwalTayangByDate = (req, res) => {
+    const {date, code_ticket} = req.query
+    models.jadwalTayangByDate(date, code_ticket)
+    .then(response => standart_response(res, response.status, response.message, response.data))
+    .catch(err => standart_response(res, err.status, err.message, err.data))
+}
+exports.jadwalTayangByDateNKota = (req, res) => {
+    const {date, kota, code_ticket} = req.query
+    models.jadwalTayangByDateNKota(date, kota, code_ticket)
+    .then(response => standart_response(res, response.status, response.message, response.data))
+    .catch(err => standart_response(res, err.status, err.message, err.data))
+}
 

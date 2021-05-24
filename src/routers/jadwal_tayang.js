@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const jadwalTayang = require("../controllers/jadwal_tayang");
 
-router.post("/add", jadwalTayang.postJadwal);
-router.get("/cari/:id_cinema", jadwalTayang.getByIdCinema);
+router.get("/", jadwalTayang.getJadwalList)
+        .get("/specific/", jadwalTayang.jadwalTayangByDate)
 
 
 module.exports = router;

@@ -19,7 +19,8 @@ app.use(express.json());
 // app.use("/v1/cinemas", cinema);
 // app.use("/v1/jadwal_tayang", jadwal_tayang);
 app.use("/v1", router);
-app.use('/img', express.static(__dirname + '/src/cover-movie'));
+app.use("/img", express.static(__dirname + "/src/cover-movie"));
+app.use("/cinema_img", express.static(__dirname + "/src/assets"));
 app.listen(process.env.PORT, ()=>{
     console.log(`running on port ${process.env.PORT}`);
 });

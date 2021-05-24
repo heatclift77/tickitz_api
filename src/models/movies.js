@@ -1,58 +1,44 @@
-const connection = require('../config/db');
+const connection = require("../config/db");
 const movie = ({
-    getMovie : (page, limit)=>{
-        if(page === undefined || limit === undefined){
-            return new Promise((resolve, reject)=>{
-                const query = `SELECT * FROM table_movie`
-                connection.query(query, function(err, results){
-                    if(!err){
-                        resolve(results);
-                    }else{
-                        reject(err.message);
-                    }
-                });
-            })
-        }else{
-            return new Promise((resolve, reject)=>{
-                page == 1 ? page = 0: page * limit - limit;
-                const query = `SELECT * FROM table_movie ORDER BY created_at ASC LIMIT ${page}, ${limit}`
-                connection.query(query, function(err, results){
-                    if(!err){
-                        resolve(results);
-                    }else{
-                        reject(err.message);
-                    }
-                });
-            })
-        }
+    movieList : ()=>{
+        return new Promise((resolve, reject)=>{
+            const query = `SELECT * from table_movie`;
+            connection.query(query, function(err, results){
+                if(!err){
+                    resolve(results);
+                }else{
+                    reject(err.message);
+                }
+            });
+        });
     },
     getMovieById : (id_movie)=>{
-        if(id_movie == undefined || id_movie == ''){
-            return new Promise((resolve, reject)=>{
-                reject({
-                    status : 400,
-                    message : "Bad request"
-                });
-            })
-        }else{
-            return new Promise((resolve, reject)=>{
-                const query = `SELECT * FROM table_movie WHERE id_movie = '${id_movie}'`
-                connection.query(query, function(err, results){
-                    if(!err){
-                        if(results.length == 0){
-                            reject({
-                                status : 404,
-                                message : "not Found"
-                            });
-                        }else{
-                            resolve(results);
-                        }
+        return new Promise((resolve, reject)=>{
+            const url = `SELECT * FROM table_movie WHERE id_movie='${id_movie}'`
+            connection.query(url, function(err, results){
+                if(!err){
+                    if(results.length == 0){
+                        reject({
+                            status : 404,
+                            message : "not Found",
+                            data : results
+                        });
                     }else{
-                        reject(err.message);
+                        resolve({
+                            status : 200,
+                            message : "succes",
+                            data : results
+                        });
                     }
-                });
-            })
-        }
+                }else{
+                    reject({
+                        status : 500,
+                        message : "Internal Server Error",
+                        data : err
+                    });
+                }
+            });
+        });
     },
     searchMovie : (key)=>{
         if(key == undefined){
@@ -61,13 +47,13 @@ const movie = ({
                     status : 400,
                     message : "Bad request"
                 });
-            })
+            });
         }else{
             return new Promise((resolve, reject)=>{
                 connection.query(`SELECT * FROM table_movie WHERE title LIKE '${key}_%'`, function(err, results){
                     if(!err){
                         if(results.length != 0){
-                            resolve(results)
+                            resolve({status:200, data:results});
                         }else{
                             reject({
                                 status : 404,
@@ -75,10 +61,13 @@ const movie = ({
                             });
                         }
                     }else{
-                        res.send(err);
+                        reject({
+                            status : 500,
+                            message : err.message
+                        });
                     }
                 });
-            })
+            });
         }
     },
     postMovie : (id_movie, title, genre, release_date, directed_by, duration, casts, synopsis, image)=>{
@@ -87,22 +76,22 @@ const movie = ({
             `INSERT INTO table_movie 
             (id_movie, title, genre, release_date, directed_by, duration, casts, synopsis, image) 
             VALUES 
-            ('${id_movie}', '${title}', '${genre}', '${release_date}', '${directed_by}', '${duration}', '${casts}', '${synopsis}', '${image}')`
+            ('${id_movie}', '${title}', '${genre}', '${release_date}', '${directed_by}', '${duration}', '${casts}', '${synopsis}', '${image}')`;
             
             connection.query(query, 
             function(err, results){
                     if(!err){
-                        resolve(results)
+                        resolve(results);
                     }else{
                         reject({
                             status : 500,
                             message : "database error",
                             response : err
-                        })
+                        });
                 }
             });
-        })
+        });
     }
-})
+});
 
-module.exports = movie
+module.exports = movie;

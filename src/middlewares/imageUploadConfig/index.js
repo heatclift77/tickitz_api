@@ -1,25 +1,27 @@
-const multer = require('multer')
+const multer = require("multer");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, `src/cover-movie`)
+        cb(null, "src/cover-movie");
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
+        cb(null, Date.now() + "-" + file.originalname);
     }
-})
+});
 const upload = multer({ 
     storage: storage ,
     fileFilter : function (req, file, cb){
-        const err = new Error('file harus gambar')
-        const file_image = file.mimetype.split('/')[1]
-        if(file_image == 'jpeg' || file_image == 'jpg' || file_image == 'png'){
-            cb(null, true)
+        const err = new Error("file harus gambar");
+        const file_image = file.mimetype.split("/")[1];
+        if(file_image == "jpeg" || file_image == "jpg" || file_image == "png"){
+            cb(null, true);
         }else{
-            cb(err, false)
+            cb(err, false);
         }
     },
-    limits : 3000000
-}).single('img')
+    limits : {
+        fileSize : 2000000
+    }
+}).single("img");
 
-module.exports = upload
+module.exports = upload;

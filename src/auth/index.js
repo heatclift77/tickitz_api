@@ -1,22 +1,39 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 const verify = (req, res, next)=>{
-    const authorization = req.headers.authorization
+    const authorization = req.headers.authorization;
     if(!authorization){
         return res.json({
-            message : 'Error, Server Butuh Token'
-        }).status(400)
+            message : "Error, Server Butuh Token"
+        }).status(400);
     }
-    const token = authorization.split(' ')[1]
+    const token = authorization.split(" ")[1];
     jwt.verify(token, process.env.PRIVATE_KEY, function(err, decode){
         if(err){
             res.json({
-                message : 'token Invalid'
-            }).status(400)
+                message : "token Invalid"
+            }).status(400);
         }else{
-            next()
+            next();
         }
-    })
+    });
+};
+
+const tokenValidation = (req, res, next) => {
+    const token = req.body.token;
+    jwt.verify(token, process.env.PRIVATE_KEY, function(err, decode){
+        if(err){
+            res.json({
+                message : "token Invalid",
+                status : 400
+            });
+        }else{
+            next();
+        }
+    });
 }
 
-module.exports = {verify}
+
+module.exports = {
+    verify, tokenValidation
+};

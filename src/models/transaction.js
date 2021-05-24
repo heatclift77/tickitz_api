@@ -58,6 +58,34 @@ const transaction = {
                 }
             });
         });
+    },
+    CheckOut : (id_user, id_ticket, order_code, data_seat, id_transaction)=>{
+        return new Promise((resolve, reject)=>{
+            connection.query(`INSERT INTO table_transaction (id_transaction, id_ticket, id_user) VALUES ('${id_transaction}','${id_ticket}','${id_user}')`)
+            connection.query(`SELECT id_cinema_cabang FROM table_data_cabang WHERE order_code ='${order_code}'`, (err, results)=>{
+                if(!err){
+                    connection.query(`UPDATE seat SET no_seat = '${data_seat}' WHERE id_cinema_cabang = '${results[0].id_cinema_cabang}'`, (err, results)=>{
+                        if(!err){
+                            resolve({
+                                status : 200,
+                                message : 'transaksi berhasil',
+                                data : results
+                            })
+                        }else{
+                            reject({
+                                status : 500,
+                                message : 'terjadi kesalahan server'
+                            })
+                        }
+                    })
+                }else{
+                    reject({
+                        status : 500,
+                        message : 'terjadi kesalahan server'
+                    })
+                }
+            })
+        })
     }
 };
 
