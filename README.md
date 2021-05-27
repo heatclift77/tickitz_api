@@ -45,4 +45,4 @@ Coming soon
 Github : https://github.com/heatclift77/TICKITZ
 
 ## 💻 Live Demo
-Coming soon
+https://zwallet-heatclift77.vercel.app
