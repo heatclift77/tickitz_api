@@ -32,6 +32,28 @@ cd tickitz_api
 ```
 npm install
 ```
+### Create env file
+```
+# ---------------------------------------
+#               CONFIG DB
+# ---------------------------------------
+HOST=localhost
+user=xxxx
+DBS=tickitz
+# ---------------------------------------
+#            CONFIG GENERAL
+# ---------------------------------------
+PORT=xxxx
+SERVER="your domain or localhost with any port"
+PRIVATE_KEY="any string key"
+DIR_IMG=http://example.com or localhost:port/img
+APP=http://localhost:xxxx
+```
+Detail CONFIG GENERAL
+| EXAMPLE URL | [http://localhost:5000]() |
+| :-------------: |:-------------:|
+| PORT | 5000 |
+| HOST | [http://localhost]() |
 ##### development
 ```
 npm run dev
