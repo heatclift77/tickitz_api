@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=400px height=300px src="https://iili.io/B8R3Zv.png" alt="logo"></a>
+ <img width=400px height=200px src="https://iili.io/B8R3Zv.png" alt="logo"></a>
 </p>
 
 <h3 align="center">Backend TICKITZ_API - Arkademy</h3>
