@@ -25,7 +25,6 @@ THIS PROJECT FOR TICKITZ APP, TASK FROM ARKADEMY
 git clone https://github.com/therevolt/Zwallet-Backend.git
 ```
 ### Go To Folder
-Open GitBash / Terminal
 ```
 cd tickitz_api
 ```
