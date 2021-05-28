@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=400px height=200px src="https://iili.io/B8R3Zv.png" alt="logo"></a>
+ <img width=300px height=120px src="https://iili.io/B8R3Zv.png" alt="logo"></a>
 </p>
 
 <h3 align="center">Backend TICKITZ_API - Arkademy</h3>
@@ -25,7 +25,6 @@ THIS PROJECT FOR TICKITZ APP, TASK FROM ARKADEMY
 git clone https://github.com/therevolt/Zwallet-Backend.git
 ```
 ### Go To Folder
-Open GitBash / Terminal
 ```
 cd tickitz_api
 ```
@@ -33,6 +32,28 @@ cd tickitz_api
 ```
 npm install
 ```
+### Create env file
+```
+# ---------------------------------------
+#               CONFIG DB
+# ---------------------------------------
+HOST=localhost
+user=xxxx
+DBS=tickitz
+# ---------------------------------------
+#            CONFIG GENERAL
+# ---------------------------------------
+PORT=xxxx
+SERVER="your domain or localhost with any port"
+PRIVATE_KEY="any string key"
+DIR_IMG=http://example.com or localhost:port/img
+APP=http://localhost:xxxx
+```
+Detail CONFIG GENERAL
+| EXAMPLE URL | [http://localhost:5000]() |
+| :-------------: |:-------------:|
+| PORT | 5000 |
+| HOST | [http://localhost]() |
 ##### development
 ```
 npm run dev
