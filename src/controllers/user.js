@@ -41,6 +41,7 @@ exports.verifycation = (req, res) => {
 exports.postUser = async (req, res, next) => {
     const email = req.body.email;
     const pass = req.body.pass;
+    console.log(email, pass);
     if(email == undefined || pass == undefined){
         standart_response(res, 400, "Bad Request", []);
     }else{

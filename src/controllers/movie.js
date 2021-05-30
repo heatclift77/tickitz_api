@@ -2,8 +2,6 @@ const movieModels = require("../models/movies");
 const standart_response = require("../utilities/standart_response");
 require("dotenv").config();
 const { v4:uuidv4 } = require("uuid");
-const redis = require("redis");
-const client = redis.createClient(6379);
 
 exports.getMovie = (req, res)=>{
     movieModels.movieList()
