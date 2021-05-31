@@ -66,4 +66,4 @@ https://documenter.getpostman.com/view/13883490/TzXzEHZR
 Github : https://github.com/heatclift77/TICKITZ
 
 ## 💻 Live Demo
-https://60b3b42f4a73d2072aa8c486--fervent-boyd-23037e.netlify.app/auth/SignIn
+https://github.com/heatclift77/TICKITZ
