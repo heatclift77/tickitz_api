@@ -66,4 +66,4 @@ https://documenter.getpostman.com/view/13883490/TzXzEHZR
 Github : https://github.com/heatclift77/TICKITZ
 
 ## 💻 Live Demo
-https://github.com/heatclift77/TICKITZ
+https://ticket-tickitz.netlify.app
